@@ -117,6 +117,7 @@ def evaluate(model, criterion, val_set, device, alpha):
     num_samples = len(bert_tokens)
     for i in range(num_samples) :
         # Move inputs and targets to device
+        torch.cuda.empty_cache()
         bert_ins, bert_seq, bert_attn_mask, bert_label = batch_generater(bert_tokens, bert_segments, bert_attentions, bert_labels, batch_size = 1, iteration = i)
         bert_ins, bert_seq, bert_attn_mask = bert_ins.to(device), bert_seq.to(device), bert_attn_mask.to(device)
         bert_inputs = bert_ins.squeeze(0), bert_seq.squeeze(0), bert_attn_mask.squeeze(0)
@@ -157,6 +158,7 @@ def train(model, criterion, optimizer, train_set, device, epoch, print_every = 1
         bert_label, xlnet_label = bert_labels.to(device), xlnet_labels.to(device)
         #loss = 0
         for batch in range(len(bert_ins)) : #len(inputs) == batch_size
+            torch.cuda.empty_cache()
             bert_inputs = bert_ins[batch], bert_seq[batch], bert_attn_mask[batch]
             xlnet_inputs = xlnet_ins[batch], xlnet_seq[batch], xlnet_attn_mask[batch]
 
